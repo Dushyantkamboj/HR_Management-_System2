@@ -1,0 +1,78 @@
+# Admin
+
+Admin-->email/passowrd------>login-->correct-->login successful.
+Admin-->email/passowrd------>inCorrect-->login fails--->enter correct email and password.
+
+After successful login
+
+1 Sidebar
+2 Main
+3 Navbar
+
+Sidebar->dashboard,employee,attendance,leaves,events,role and permissions,settings
+
+dashboard->cards->total employee,active employee,inactive employee,onLeaves,graph on the basis of leaves, events.
+
+employee->employee list table, add button , edit button , delete button
+
+attendance->attendance list table, date range picker , employee drop down
+
+leaves->leaves list table, approve button , reject button , delete button , employee drop down 
+
+event ->event list table, edit button , delete button , add button
+
+roles and permissions -> show all roles and permissions list
+
+My Profile-> show the current details like name and gmail , change name  , role , change password
+
+-navbar->login user name , my profile , logout.
+
+# HR
+
+HR-->email/passowrd------>login-->correct-->login successful.
+HR-->email/passowrd------>inCorrect-->login fails--->enter correct email and password.
+
+After successful login
+
+1 Sidebar
+2 Main
+3 Navbar
+
+Sidebar->dashboard,employee,attendance,leaves,events,settings
+
+dashboard->cards->total employee,active employee,inactive employee,onLeaves,events,graph on the basis of leaves.
+
+employee->employee list table, add button , edit button , delete button
+
+attendance->attendance list table, date range picker
+
+leaves->leaves list table, apprve button , reject button 
+
+event ->event list table, edit button , delete button , add button
+
+settings-> show the current details like name and gmail , change name  , role , change password
+
+-navbar->login user name , my profile , logout.
+
+# Employee
+
+Employee-->email/passowrd------>login-->correct-->login successful.
+Employee-->email/passowrd------>inCorrect-->login fails--->enter correct email and password.
+
+After successful login
+
+1 Sidebar
+2 Main
+3 Navbar
+
+Sidebar->attendance,leaves,events,settings
+
+attendance-> own attendance list table, checkIn , checkOut , date picker
+
+leaves-->own leaves list table, add leaves button , edit button and  delete button if pending.
+
+events->see events cards only.
+
+settings-> show the current details like name and gmail , change name  ,show role , change password
+
+-navbar->login user name , my profile , logout.
