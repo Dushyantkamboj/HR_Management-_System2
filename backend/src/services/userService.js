@@ -278,7 +278,7 @@ import { access_token, refresh_token } from "../utils/JWT.js";
 export const employee_details_service = async (payload) => {
   try {
     const db = await connectDataBase();
-    const users = db.collection("user");
+    const users = db.collection("users");
 
     const datatype = payload.datatype;
 
