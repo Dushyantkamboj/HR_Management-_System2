@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { User, Lock, Mail, Check, Info } from "lucide-react";
-import ProfileHeader from "../components/ProfileHeader ";
+import ProfileHeader from "../components/ProfileHeader";
 import Cookies from 'js-cookie';
 import { toast } from "react-toastify";
 import { change_employee_password } from "../api/user/changePassword";
