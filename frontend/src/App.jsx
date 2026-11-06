@@ -14,7 +14,7 @@ import Events from './pages/Events';
 import RolePermission from './pages/RolePermission';
 import MyProfile from './pages/MyProfile';
 // import ProtectedRoute from './components/ProtectedRoute';
-import ProtectedRoute from './components/protectedRoute';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import UserContextProvider from './context/context';
 
 
