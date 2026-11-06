@@ -15,8 +15,6 @@ export const list_attendance = async(body)=>{
             }
         )
 
-        console.log('response:',response);
-
         return response;
 
     } catch (error) {

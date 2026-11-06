@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { connectDataBase } from "../Database/database.js";
+import { connectDataBase } from "../database/database.js";
 import moment from "moment";
 
 export const list_attendance_service = async (payload) => {
