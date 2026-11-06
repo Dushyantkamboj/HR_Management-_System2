@@ -13,7 +13,7 @@ import Leaves from './pages/Leaves';
 import Events from './pages/Events';
 import RolePermission from './pages/RolePermission';
 import MyProfile from './pages/MyProfile';
-import ProtectedRoute from './components/protectedRoute';
+import ProtectedRoute from './components/ProtectedRoute';
 import UserContextProvider from './context/context';
 
 
