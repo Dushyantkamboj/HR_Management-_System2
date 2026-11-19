@@ -1,1 +1,153 @@
 @import "tailwindcss";
+
+@layer base {
+  /* Never let any element push the document wider than the viewport. */
+  html,
+  body,
+  #root {
+    max-width: 100%;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  /* ---------- Shared page layout ---------- */
+  .page-header {
+    @apply mx-auto mt-6 flex w-full max-w-7xl flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .page-title {
+    @apply text-xl font-semibold tracking-tight sm:text-2xl;
+  }
+
+  .primary-btn {
+    @apply inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-[#6C63FF] bg-[#6C63FF] px-4 py-2 font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-indigo-600 focus:outline-none sm:w-auto;
+  }
+
+  .stat-grid {
+    @apply mt-6 grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4;
+  }
+
+  .stat-card {
+    @apply flex min-h-28 w-full flex-col justify-between rounded-xl border border-[#E2E4ED] bg-white p-4 transition-shadow hover:shadow-md sm:p-5;
+  }
+
+  .filter-bar {
+    @apply mx-auto mt-6 flex w-full max-w-7xl flex-col gap-3 sm:flex-row sm:items-center;
+  }
+
+  .search-input {
+    @apply w-full rounded-xl border border-[#E2E4ED] bg-white py-2.5 pl-10 pr-3 text-sm text-gray-700 placeholder:text-[#A0A3B8] focus:border-indigo-600 focus:shadow-md focus:shadow-indigo-200 focus:outline-none;
+  }
+
+  .filter-select {
+    @apply w-full shrink-0 rounded-xl border border-[#E2E4ED] bg-white px-3 py-2.5 text-sm text-[#A0A3B8] hover:cursor-pointer focus:outline-none sm:w-auto;
+  }
+
+  /* ---------- Data tables ---------- */
+  .table-shell {
+    @apply mx-auto mt-6 w-full max-w-7xl overflow-x-auto rounded-2xl border border-[#E2E4ED] bg-white shadow-sm;
+  }
+
+  .data-table {
+    @apply w-full table-auto text-left;
+  }
+
+  .th-cell {
+    @apply whitespace-nowrap px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-[#A0A3B8] sm:text-sm;
+  }
+
+  .td-cell {
+    @apply whitespace-nowrap px-4 py-4 text-center text-sm;
+  }
+
+  /* ---------- Modals ---------- */
+  .modal-overlay {
+    @apply fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/50 p-3 backdrop-blur-sm sm:p-4;
+  }
+
+  .modal-panel {
+    @apply max-h-[92vh] w-full overflow-y-auto rounded-2xl border border-[#FFFFFF] bg-white shadow-2xl;
+  }
+
+  .modal-header {
+    @apply sticky top-0 z-20 flex min-h-20 w-full items-center justify-between gap-3 border-b border-[#E5E7EB] bg-white py-4;
+  }
+
+  .modal-icon {
+    @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#6C63FF] bg-[linear-gradient(135deg,rgb(79,142,247),rgb(108,99,255))];
+  }
+
+  .modal-title {
+    @apply text-lg font-semibold text-[#0F172A] sm:text-xl;
+  }
+
+  .modal-close {
+    @apply mr-5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#E8EDF5] bg-[#F8FAFC] sm:mr-5;
+  }
+
+  .modal-section {
+    @apply w-full px-5;
+  }
+
+  .modal-section-title {
+    @apply flex items-center gap-2 font-bold text-sm text-[#475569];
+  }
+
+  .modal-row {
+    @apply flex w-full flex-col gap-3 sm:flex-row sm:items-start sm:gap-3;
+  }
+
+  .modal-field {
+    @apply flex w-full flex-col sm:w-1/2;
+  }
+
+  .modal-label {
+    @apply mb-1 text-sm font-medium text-[#475569];
+  }
+
+  .modal-input {
+    @apply w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-2 text-sm text-gray-800 placeholder:text-[#9CA3AF] focus:border-indigo-500 focus:outline-none;
+  }
+
+  .modal-select {
+    @apply w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-2 text-sm text-gray-800 focus:border-indigo-500 focus:outline-none;
+  }
+
+  .modal-info {
+    @apply mx-5 flex items-start gap-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] p-3 text-sm text-[#9CA3AF];
+  }
+
+  .modal-footer {
+    @apply sticky bottom-0 z-20 w-full border-t border-[#E5E7EB] bg-white px-5 py-3;
+  }
+
+  .modal-footer-row {
+    @apply flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .modal-actions {
+    @apply flex flex-wrap gap-2 sm:gap-3;
+  }
+
+  .modal-cancel {
+    @apply rounded-lg border border-[#9CA3AF] px-4 py-2 text-sm text-[#6B7280];
+  }
+
+  .modal-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-[#6C63FF] px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60;
+  }
+}

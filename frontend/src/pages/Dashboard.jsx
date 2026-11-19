@@ -1,12 +1,6 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/Header';
-
-import {
-  Users,
-  UserCheck,
-  UserX,
-  MapPin,
-} from 'lucide-react';
+import { Users, UserCheck, UserX, MapPin} from 'lucide-react';
 
 import { list_employee } from '../api/user/listUser';
 import ReactApexChart from 'react-apexcharts';
@@ -49,7 +43,7 @@ const Dashboard = () => {
   // =========================
   // ON LEAVE (placeholder until real field exists on employee)
   // =========================
-  const onLeaveCount = 7;
+  const onLeaveCount = 0;
 
   // =====================================================
   // LEAVE TRENDS CHART
@@ -66,12 +60,7 @@ const Dashboard = () => {
       },
     },
 
-    colors: [
-      '#4F8EF7',
-      '#F34B7D',
-      '#635BFF',
-    ],
-
+    colors: ['#4F8EF7', '#F34B7D', '#635BFF',],
     stroke: {
       curve: 'smooth',
       width: 3,
@@ -129,7 +118,7 @@ const Dashboard = () => {
       labels: {
         style: {
           colors: '#8B95A7',
-          fontSize: '13px',
+          fontSize: '11px',
         },
       },
     },
@@ -183,6 +172,23 @@ const Dashboard = () => {
         horizontal: 10,
       },
     },
+
+    responsive: [
+      {
+        breakpoint: 640,
+        options: {
+          legend: {
+            fontSize: '11px',
+            horizontalAlign: 'left',
+            itemMargin: { horizontal: 6 },
+          },
+          xaxis: { labels: { style: { fontSize: '10px' } } },
+          yaxis: { labels: { style: { fontSize: '10px' } } },
+          title: { style: { fontSize: '15px' } },
+          subtitle: { style: { fontSize: '11px' } },
+        },
+      },
+    ],
 
     title: {
       text: 'Leave Trends',
@@ -314,6 +320,24 @@ const Dashboard = () => {
         },
       },
     },
+
+    responsive: [
+      {
+        breakpoint: 640,
+        options: {
+          plotOptions: {
+            pie: {
+              donut: {
+                labels: {
+                  value: { fontSize: '18px' },
+                  total: { fontSize: '11px' },
+                },
+              },
+            },
+          },
+        },
+      },
+    ],
   };
 
   const workforceChartSeries = [
@@ -399,7 +423,7 @@ const Dashboard = () => {
     {
       id: 4,
       label: 'On Leave',
-      subtext: '7 annual · 2 sick leave',
+      subtext: '0 annual · 0 sick leave',
       number: onLeaveCount,
       badge: '— Same',
       badgeColor: '#8B95A7',
@@ -413,7 +437,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="ml-4 mt-8 max-w-7xl">
+    <div className="mx-auto w-full max-w-7xl">
 
       <div className='mb-5'>
         <Header />
@@ -423,26 +447,13 @@ const Dashboard = () => {
           DASHBOARD CARDS
       ========================= */}
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="stat-grid">
 
         {statCards.map((card) => {
           const Icon = card.icon;
 
           return (
-            <div
-              key={card.id}
-              className="
-                relative
-                overflow-hidden
-                bg-white
-                border border-[#EDEFF5]
-                rounded-2xl
-                p-5
-                flex
-                flex-col
-                gap-4
-              "
-            >
+            <div key={card.id} className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-[#EDEFF5] bg-white p-4 sm:p-5">
 
               {/* Decorative blob */}
 
@@ -516,17 +527,20 @@ const Dashboard = () => {
           CHARTS ROW (HORIZONTAL)
       ========================= */}
 
-      <div className="flex flex-row gap-4 mt-6 items-stretch">
+      <div className="mt-6 flex flex-col gap-4 xl:flex-row xl:items-stretch">
 
         {/* LEAVE TRENDS CHART */}
 
         <div
           className="
+            min-w-0
+            w-full
             flex-1
             bg-white
             border border-[#E2E4ED]
             rounded-2xl
-            p-5
+            p-4
+            sm:p-5
           "
         >
           <ReactApexChart
@@ -541,11 +555,14 @@ const Dashboard = () => {
 
         <div
           className="
-            w-96
+            w-full
+            shrink-0
             bg-white
             border border-[#E2E4ED]
             rounded-2xl
-            p-5
+            p-4
+            sm:p-5
+            xl:w-96
           "
         >
           <h3 className="text-lg font-semibold text-[#111827]">
@@ -581,7 +598,7 @@ const Dashboard = () => {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 w-32">
+                <div className="flex w-24 items-center gap-2 sm:w-32">
                   <div className="flex-1 h-1.5 bg-[#EEF0F5] rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full"

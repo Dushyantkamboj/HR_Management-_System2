@@ -4,9 +4,8 @@ export const validations=(schema,body)=>{
     
     return (req,res,next)=>{
         const payload=body==="body"?req.body:req.query;
-        
-        console.log("payload",payload);
-        
+
+        // console.log('payload:',payload);
 
         const {error}=schema.validate(payload)
         if(error){

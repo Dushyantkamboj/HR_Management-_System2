@@ -249,10 +249,10 @@ const Attendance = () => {
     <div>
 
       {/* Header */}
-      <div className="flex max-w-7xl mx-auto justify-between items-start mt-5">
+      <div className="page-header">
 
-        <div className="max-w-80 ml-4">
-          <h1 className="font-semibold text-2xl tracking-tight">Attendance</h1>
+        <div className="min-w-0">
+          <h1 className="page-title">Attendance</h1>
           <p className="text-[#94A3B8] text-sm">
             View and manage employee attendance records
           </p>
@@ -261,9 +261,9 @@ const Attendance = () => {
         {type !== 1 && type !== 2 &&
           <button
             onClick={() => setisFormopen(true)}
-            className="min-w-30 py-2 px-2 flex justify-center items-center shadow-md mr-4 bg-[#6C63FF] text-white border border-[#6C63FF] rounded-xl transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:bg-indigo-600 font-semibold focus:outline-none"
+            className="primary-btn"
           >
-            Add Attendance
+           + Add Attendance
           </button>
         }
 
@@ -278,13 +278,13 @@ const Attendance = () => {
 
       {/* Cards (Admin / HR only) */}
       {type !== 3 &&
-        <div className="grid grid-cols-4 gap-4 mt-8 max-w-7xl mx-auto ml-4 z-20">
+        <div className="stat-grid">
 
           {CARDS.map((items) => (
 
             <div
               key={items.id}
-              className="flex flex-col gap-5 border border-[#E2E4ED] bg-[#FFFFFF] rounded-xl max-w-100 min-h-30 transition-shadow hover:shadow-md"
+              className="stat-card"
             >
 
               <div className='flex justify-between items-center mt-3 pr-2'>
@@ -314,9 +314,9 @@ const Attendance = () => {
       }
 
       {/* Search */}
-      <div className='flex gap-3 max-w-7xl mx-auto mt-8 ml-4'>
+      <div className='filter-bar'>
 
-        <div className='relative flex items-center w-full'>
+        <div className='relative flex w-full items-center'>
 
           <Search
             size={18}
@@ -326,7 +326,7 @@ const Attendance = () => {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className='border w-full pl-10 rounded-xl py-2.5 transition-all border-[#E2E4ED] bg-[#FFFFFF] placeholder:text-[#A0A3B8] focus:outline-none focus:border-indigo-600 focus:shadow-md focus:shadow-indigo-200 text-sm'
+            className='search-input'
             type="text"
             placeholder='Search attendance...'
           />
@@ -336,16 +336,16 @@ const Attendance = () => {
       </div>
 
       {/* Attendance Table */}
-      <div className='mt-8 ml-4 max-w-7xl mx-auto'>
+      <div className='table-shell'>
 
-        <table className='rounded-2xl border shadow-sm bg-[#FFFFFF] border-[#E2E4ED] table-auto overflow-hidden w-full'>
+        <table className='data-table min-w-[820px]'>
 
           <thead>
             <tr className='border-b border-[#E2E4ED] bg-[#FAFBFF]'>
               {["Employee", "Date", "Check in", "Check out", "Total hours", "Status", "Actions"].map((h, i) => (
                 <th
                   key={h}
-                  className={`py-3 uppercase text-sm font-semibold text-[#A0A3B8] ${i === 0 ? 'text-left pl-6' : 'text-center'}`}
+                  className={`th-cell ${i === 0 ? '!text-left !pl-6' : ''}`}
                 >
                   {h}
                 </th>
@@ -406,23 +406,23 @@ const Attendance = () => {
                       </div>
                     </td>
 
-                    <td className='text-center px-5 py-4 text-[#64748B] text-sm'>
+                    <td className='td-cell text-[#64748B]'>
                       {getDate(item.check_in)}
                     </td>
 
-                    <td className='text-center px-5 py-4 font-semibold text-[#0F172A] text-sm'>
+                    <td className='td-cell font-semibold text-[#0F172A]'>
                       {getTime(item.check_in)}
                     </td>
 
-                    <td className='text-center px-5 py-4 font-semibold text-[#0F172A] text-sm'>
+                    <td className='td-cell font-semibold text-[#0F172A]'>
                       {getTime(item.check_out)}
                     </td>
 
-                    <td className='text-center px-5 py-4 font-semibold text-[#475569] text-sm'>
+                    <td className='td-cell font-semibold text-[#475569]'>
                       {getTotalHours(item.check_in, item.check_out)}
                     </td>
 
-                    <td className='text-center px-5 py-4'>
+                    <td className='td-cell'>
                       {status ? (
                         <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${status.pill}`}>
                           <span className={`w-2 h-2 rounded-full ${status.dot}`}></span>
@@ -434,7 +434,7 @@ const Attendance = () => {
                     </td>
 
                     {/* Actions: Eye only */}
-                    <td className='text-center px-5 py-4'>
+                    <td className='td-cell'>
                       <button
                         type="button"
                         onClick={() => handleView(item)}

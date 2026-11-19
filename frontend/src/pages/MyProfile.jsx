@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, Lock, Mail, Check, Info } from "lucide-react";
+import { User, Lock, Mail, Info } from "lucide-react";
 import ProfileHeader from "../components/ProfileHeader";
 import Cookies from 'js-cookie';
 import { toast } from "react-toastify";
@@ -24,9 +24,9 @@ const MyProfile = () => {
   const [showPasswords, setShowPasswords] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
 
-  const handleProfileSave = () => {
-    console.log("Save profile", profile);
-  };
+  // const handleProfileSave = () => {
+  //   console.log("Save profile", profile);
+  // };
 
   const handlePasswordUpdate = async () => {
 
@@ -79,7 +79,7 @@ const MyProfile = () => {
 
   return (
 
-    <div className="min-h-screen bg-slate-100 p-6 font-sans">
+    <div className="min-h-screen bg-slate-100 p-4 font-sans sm:p-6">
       <div className="max-h-screen mb-10  bg-slate-100  font-sans">
         <ProfileHeader
           name={profile.fullName}
@@ -89,8 +89,8 @@ const MyProfile = () => {
       </div>
       <div className="flex flex-col items-start gap-6 lg:flex-row">
         {/* Personal information */}
-        <div className="w-full overflow-hidden rounded-3xl bg-white shadow-sm lg:w-[720px]">
-          <div className="flex items-center gap-4 border-b border-slate-100 px-7 py-6">
+        <div className="w-full overflow-hidden rounded-3xl bg-white shadow-sm lg:max-w-[720px]">
+          <div className="flex items-center gap-4 border-b border-slate-100 px-5 py-6 sm:px-7">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-500">
               <User size={20} />
             </div>
@@ -104,7 +104,7 @@ const MyProfile = () => {
             </div>
           </div>
 
-          <div className="space-y-6 px-7 py-7">
+          <div className="space-y-6 px-5 py-7 sm:px-7">
             <div>
               <label className="mb-2 block text-sm font-semibold text-slate-700">
                 Full name
@@ -145,22 +145,23 @@ const MyProfile = () => {
               <label className="mb-2 block text-sm font-semibold text-slate-700">
                 Role
               </label>
-              <select
+              <input
                 value={profile.role}
-                onChange={(e) =>
-                  setProfile({ ...profile, role: e.target.value })
-                }
-                className={`${inputBase} cursor-pointer`}
+                // onChange={(e) =>
+                //   setProfile({ ...profile, role: e.target.value })
+                // }
+                disabled
+                className={`${inputBase} cursor-not-allowed`}
               >
-                <option>HR Administrator</option>
+                {/* <option>HR Administrator</option>
                 <option>HR Manager</option>
                 <option>Recruiter</option>
-                <option>Employee</option>
-              </select>
+                <option>Employee</option> */}
+              </input>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50/60 px-7 py-5">
+          <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-5 sm:px-7">
             {/* <button
               type="button"
               className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
@@ -179,8 +180,8 @@ const MyProfile = () => {
         </div>
 
         {/* Change password */}
-        <div className="w-full overflow-hidden rounded-3xl bg-white shadow-sm lg:w-[566px]">
-          <div className="flex items-center gap-4 border-b border-slate-100 px-7 py-6">
+        <div className="w-full overflow-hidden rounded-3xl bg-white shadow-sm lg:max-w-[566px]">
+          <div className="flex items-center gap-4 border-b border-slate-100 px-5 py-6 sm:px-7">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-purple-500">
               <Lock size={20} />
             </div>
@@ -192,7 +193,7 @@ const MyProfile = () => {
             </div>
           </div>
 
-          <div className="space-y-5 px-7 py-7">
+          <div className="space-y-5 px-5 py-7 sm:px-7">
             <div>
               <label className="mb-2 block text-sm font-semibold text-slate-700">
                 Current password

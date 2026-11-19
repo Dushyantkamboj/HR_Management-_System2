@@ -20,21 +20,21 @@ const ProfileHeader = ({
       </div>
 
       {/* Info row */}
-      <div className="relative flex flex-col gap-4 px-8 pb-6 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-6">
+      <div className="relative flex flex-col gap-4 px-5 pb-6 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <div className="flex min-w-0 items-center gap-4 sm:gap-6">
           {/* Avatar overlapping the banner */}
-          <div className="-mt-10 flex h-[104px] w-[104px] shrink-0 items-center justify-center rounded-[26px] bg-white shadow-[0_12px_28px_-6px_rgba(244,63,94,0.35)]">
-            <div className="flex h-[88px] w-[88px] items-center justify-center rounded-[22px] bg-gradient-to-br from-orange-400 to-rose-500 text-[28px] font-bold text-white">
+          <div className="-mt-10 flex h-20 w-20 shrink-0 items-center justify-center rounded-[26px] bg-white shadow-[0_12px_28px_-6px_rgba(244,63,94,0.35)] sm:h-[104px] sm:w-[104px]">
+            <div className="flex h-16 w-16 items-center justify-center rounded-[22px] bg-gradient-to-br from-orange-400 to-rose-500 text-2xl font-bold text-white sm:h-[88px] sm:w-[88px] sm:text-[28px]">
               {initials}
             </div>
           </div>
 
-          <div className="pt-4 sm:pt-5">
-            <h1 className="text-2xl font-extrabold text-slate-900">{name}</h1>
-            <div className="mt-1 flex items-center gap-2 text-sm text-slate-500">
+          <div className="min-w-0 pt-4 sm:pt-5">
+            <h1 className="break-words text-xl font-extrabold text-slate-900 sm:text-2xl">{name}</h1>
+            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500 sm:text-sm">
               <span>{role}</span>
               <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
-              <span>{email}</span>
+              <span className="break-all">{email}</span>
             </div>
           </div>
         </div>

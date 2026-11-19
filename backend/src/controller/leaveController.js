@@ -48,11 +48,11 @@ export const update_leave_controller=async(req,res)=>{
 
         return res.status(response.status_code).json(response)
     } catch (error) {
-        return {
+        return res.status(400).json({
             status:0,
             status_code:400,
             message:error.message
-        }
+        })
     }
 }
 

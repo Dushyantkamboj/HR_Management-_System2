@@ -58,11 +58,11 @@ const EditEvent = ({ event, Close, updateEvent }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div className="modal-overlay">
 
-      <div className="w-[600px] max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+      <div className="modal-panel max-w-2xl">
 
-        <div className="flex items-center justify-between border-b px-6 py-4">
+        <div className="modal-header px-6">
           <h2 className="text-xl font-semibold">
             Edit Event
           </h2>
@@ -77,11 +77,11 @@ const EditEvent = ({ event, Close, updateEvent }) => {
 
         <form
           onSubmit={handleSubmit}
-          className="grid grid-cols-2 gap-4 p-6"
+          className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 sm:p-6"
         >
 
           {/* Title */}
-          <div className="col-span-2">
+          <div className="col-span-1 sm:col-span-2">
             <label className="mb-1 block text-sm font-medium">
               Event Title
             </label>
@@ -229,7 +229,7 @@ const EditEvent = ({ event, Close, updateEvent }) => {
           </div>
 
           {/* Buttons */}
-          <div className="col-span-2 flex justify-end gap-3 border-t pt-5">
+          <div className="col-span-1 flex flex-wrap justify-end gap-3 border-t pt-5 sm:col-span-2">
 
             <button
               type="button"

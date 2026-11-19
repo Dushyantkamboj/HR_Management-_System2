@@ -1,13 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Calendar,
-  UsersRound,
-  CalendarCheck,
-  Pencil,
-  Trash2,
-  MapPin,
-  UserRound,
-} from "lucide-react";
+import {Calendar, UsersRound, CalendarCheck, Pencil, Trash2, MapPin, UserRound} from "lucide-react";
 
 import AddEvent from "../components/AddEvent.jsx";
 import EditEvent from "../components/EditEvent.jsx";
@@ -37,10 +29,6 @@ const Events = () => {
     totalPages: 1,
     totalevents: 0,
   });
-
-  // ==============================
-  // GET EVENT LIST
-  // ==============================
 
   const getEvents = async () => {
 
@@ -290,11 +278,11 @@ const Events = () => {
 
       {/* ================= HEADER ================= */}
 
-      <div className="flex max-w-7xl mx-auto justify-between items-start mt-5">
+      <div className="page-header">
 
-        <div className="max-w-80 ml-4">
+        <div className="min-w-0">
 
-          <h1 className="font-semibold text-2xl tracking-tight">
+          <h1 className="page-title">
             Events
           </h1>
 
@@ -309,7 +297,7 @@ const Events = () => {
 
           <button
             onClick={() => setisFormopen(true)}
-            className="min-w-30 py-2 flex justify-center items-center shadow-md mr-4 bg-[#6C63FF] text-white border border-[#6C63FF] rounded-xl transition duration-300 hover:-translate-y-1 hover:bg-indigo-600 font-semibold focus:outline-none"
+            className="primary-btn"
           >
             + Add Event
           </button>
@@ -331,13 +319,13 @@ const Events = () => {
 
       {/* ================= CARDS ================= */}
 
-      <div className="grid grid-cols-3 gap-4 mt-8 max-w-7xl mx-auto ml-4 z-20">
+      <div className="mx-auto mt-6 grid w-full max-w-7xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
 
         {data.map((items) => (
 
           <div
             key={items.id}
-            className="flex flex-col gap-5 border border-[#E2E4ED] bg-[#FFFFFF] rounded-xl max-w-100 min-h-30 transition-shadow hover:shadow-md"
+            className="stat-card"
           >
 
             <div className="flex justify-between items-center mt-3 pr-2">
@@ -365,12 +353,12 @@ const Events = () => {
 
       {/* ================= SEARCH ================= */}
 
-      <div className="flex gap-3 max-w-7xl mx-auto mt-8 ml-4">
+      <div className="filter-bar">
 
-        <div className="relative flex items-center w-full">
+        <div className="relative flex w-full items-center">
 
           <input
-            className="border w-full pl-4 rounded-xl py-2.5 transition-all border-[#E2E4ED] bg-[#FFFFFF] placeholder:text-[#A0A3B8] focus:outline-none focus:border-indigo-600 focus:shadow-md focus:shadow-indigo-200 text-sm"
+            className="search-input !pl-4"
             type="text"
             placeholder="Search events..."
             value={search}
@@ -384,41 +372,41 @@ const Events = () => {
 
       {/* ================= TABLE ================= */}
 
-      <div className="mt-8 ml-4 max-w-7xl mx-auto overflow-x-auto">
+      <div className="table-shell">
 
-        <table className="rounded-2xl border shadow-sm bg-[#FFFFFF] border-[#E2E4ED] table-auto overflow-hidden w-full">
+        <table className="data-table min-w-[900px]">
 
           <thead>
 
             <tr className="border-b border-[#E2E4ED] bg-[#FAFBFF]">
 
-              <th className="text-left px-5 py-4 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell !text-left">
                 Event
               </th>
 
-              <th className="text-left px-5 py-4 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell !text-left">
                 Date & Time
               </th>
 
-              <th className="text-left px-5 py-4 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell !text-left">
                 Location
               </th>
 
-              <th className="text-left px-5 py-4 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell !text-left">
                 Organizer
               </th>
 
-              <th className="text-center px-5 py-4 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Attendees
               </th>
 
-              <th className="text-center px-5 py-4 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Status
               </th>
 
               {type !== 3 && (
 
-                <th className="text-center px-5 py-4 uppercase text-sm font-semibold text-[#A0A3B8]">
+                <th className="th-cell">
                   Action
                 </th>
 
@@ -641,7 +629,7 @@ const Events = () => {
 
       {/* ================= PAGINATION ================= */}
 {pagination.totalEvents >= 10 && (
-      <div className="flex justify-end items-center gap-3 mt-5 mr-4">
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:justify-end sm:mr-4">
 
         <button
           disabled={page === 1}

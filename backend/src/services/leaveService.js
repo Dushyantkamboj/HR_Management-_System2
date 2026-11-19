@@ -168,7 +168,6 @@ export const add_leave_service = async (payload) => {
 };
 
 export const update_leave_service = async (payload) => {
-  // console.log('payload:',payload);
   try {
     const db = await connectDataBase();
     const leaves = db.collection("leaves");
@@ -177,13 +176,30 @@ export const update_leave_service = async (payload) => {
       _id: new ObjectId(payload.id),
       is_deleted: false,
     });
-    // console.log('leaveDetails:',leaveDetails);
 
     if (!leaveDetails) {
       return {
         status: 0,
-        status_code: 400,
-        message: "leave not find",
+        status_code: 404,
+        message: "Leave not found",
+      };
+    }
+
+    // Only the employee who applied can edit their own leave.
+    if (String(leaveDetails.userId) !== String(payload.userId)) {
+      return {
+        status: 0,
+        status_code: 403,
+        message: "You can only update your own leave requests",
+      };
+    }
+
+    // Once Admin/HR has taken an action the request is locked.
+    if (Number(leaveDetails.status) !== 1) {
+      return {
+        status: 0,
+        status_code: 409,
+        message: "This leave has already been approved or rejected and can no longer be updated",
       };
     }
 
@@ -194,14 +210,14 @@ export const update_leave_service = async (payload) => {
       to: payload.to,
       reason: payload.reason,
       updated_at: Date.now(),
-      updated_by: new ObjectId(payload.userID),
+      updated_by: new ObjectId(payload.userId),
     };
 
     await leaves.updateOne({ _id: leaveDetails._id }, { $set: userLeave });
     return {
       status: 1,
       status_code: 200,
-      message: "leave updated successfully",
+      message: "Leave updated successfully",
     };
   } catch (error) {
     throw {
@@ -250,23 +266,22 @@ export const delete_leave_service = async (payload) => {
 };
 
 export const status_leave_service = async (payload) => {
-
-console.log('payload:',payload);
   try {
     const db = await connectDataBase();
-    const user = db.collection("user");
+    const users = db.collection("users");
     const leaves = db.collection("leaves");
 
-    const userDetails = await user.findOne({
-      _id: new ObjectId(payload.userID),
+    // Only Admin (1) / HR (2) may approve or reject a leave.
+    const reviewer = await users.findOne({
+      _id: new ObjectId(payload.userId),
       status: 1,
       is_deleted: false,
     });
-    if (!userDetails) {
+    if (!reviewer || (reviewer.type !== 1 && reviewer.type !== 2)) {
       return {
         status: 0,
-        status_code: 1,
-        message: "user details not find",
+        status_code: 403,
+        message: "Only Admin or HR can update a leave status",
       };
     }
 
@@ -277,20 +292,29 @@ console.log('payload:',payload);
     if (!leavesDetails) {
       return {
         status: 0,
-        status_code: 400,
-        message: "leaves details not find",
+        status_code: 404,
+        message: "Leave not found",
+      };
+    }
+
+    // A decision is final - a reviewed request cannot be changed again.
+    if (Number(leavesDetails.status) !== 1) {
+      return {
+        status: 0,
+        status_code: 409,
+        message: "This leave has already been approved or rejected",
       };
     }
 
     await leaves.updateOne(
       { _id: new ObjectId(payload.id) },
-      { $set: { status: payload.status } },
+      { $set: { status: payload.status, updated_at: Date.now(), updated_by: reviewer._id } },
     );
     return {
       status: 1,
       status_code: 200,
-      message: "updated successfully",
-      statusType:payload.status
+      message: "Leave status updated successfully",
+      statusType: payload.status
     };
   } catch (error) {
     throw {

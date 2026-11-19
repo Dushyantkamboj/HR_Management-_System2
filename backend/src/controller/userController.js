@@ -156,7 +156,10 @@ import {
   update_employee_service,
   delete_employee_service,
   employee_login_service,
-  employee_change_password_service
+  employee_change_password_service,
+  forgot_password_service,
+  reset_password_service,
+  verify_reset_token_service
 } from "../services/userService.js";
 
 
@@ -456,3 +459,76 @@ export const change_password_controller = async (req, res) => {
   }
 
 };
+
+
+export const forgot_password_controller=async(req,res)=>{
+  try {
+    const body={
+      ...req.body,
+      datatype:'email'
+    }
+
+    const userExist=await employee_details_service(body)
+
+    // Always return the same message so we don't reveal whether an email
+    // is registered. The service only sends mail when the account exists.
+    const genericResponse = {
+      status: 1,
+      status_code: status_code.SUCCESS,
+      message: "If an account exists for this email, a password reset link has been sent.",
+    };
+
+    if(!userExist.status){
+      return res.status(status_code.SUCCESS).json(genericResponse)
+    }
+
+    const data={
+      ...req.body,
+      ...userExist
+    }
+
+    await forgot_password_service(data)
+    return res.status(genericResponse.status_code).json(genericResponse)
+  } catch (error) {
+    return res.status(status_code.BAD_REQUEST).json({
+      status:0,
+      status_code:status_code.BAD_REQUEST,
+      message:error.message
+    })
+  }
+}
+
+// ======================================================
+// RESET PASSWORD
+// ======================================================
+
+export const verify_reset_token_controller=async(req,res)=>{
+  try {
+    const response=await verify_reset_token_service(req.body)
+    return res.status(response.status_code).json(response)
+  } catch (error) {
+    return res.status(status_code.BAD_REQUEST).json({
+      status:0,
+      status_code:status_code.BAD_REQUEST,
+      message:error.message
+    })
+  }
+}
+
+export const reset_password_controller=async(req,res)=>{
+  try {
+    const data={
+      ...req.body,
+      datatype:'email'
+    }
+
+    const response=await reset_password_service(data)
+    return res.status(response.status_code).json(response)
+  } catch (error) {
+    return res.status(status_code.BAD_REQUEST).json({
+      status:0,
+      status_code:status_code.BAD_REQUEST,
+      message:error.message
+    })
+  }
+}

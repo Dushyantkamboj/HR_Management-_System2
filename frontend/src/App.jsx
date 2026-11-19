@@ -13,9 +13,11 @@ import Leaves from './pages/Leaves';
 import Events from './pages/Events';
 import RolePermission from './pages/RolePermission';
 import MyProfile from './pages/MyProfile';
-// import ProtectedRoute from './components/ProtectedRoute';
-import ProtectedRoute from './components/ProtectedRoute.jsx';
+import ProtectedRoute from './components/ProtectedRoute';
+// import ProtectedRoute from './components/ProtectedRoute.jsx';
 import UserContextProvider from './context/context';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 
 function App() {
@@ -26,6 +28,9 @@ function App() {
 
           <Route path="/admin/login" element={<Login />} />
           <Route path='/login' element={<EmployeeLogin />} />
+
+          <Route path='/forgotpassword' element={<ForgotPassword />} />
+          <Route path='/reset-password/:token' element={<ResetPassword />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Layout />}>

@@ -337,7 +337,7 @@ const RolePermission = () => {
   const tabBase = "flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition";
 
   return (
-    <div className="min-h-screen bg-slate-100 p-6 font-sans">
+    <div className="min-h-screen bg-slate-100 p-4 font-sans sm:p-6">
       {/* Summary cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {STATS.map((s) => (
@@ -348,7 +348,7 @@ const RolePermission = () => {
       {/* Toolbar */}
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4">
-          <div className="relative w-72">
+          <div className="relative w-full sm:w-72">
             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
@@ -379,7 +379,7 @@ const RolePermission = () => {
           </div>
         </div>
 
-        <button className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 px-6 py-3.5 text-[15px] font-bold text-white shadow-lg shadow-indigo-200 transition hover:opacity-90">
+        <button className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 px-6 py-3.5 text-[15px] font-bold text-white shadow-lg shadow-indigo-200 transition hover:opacity-90 sm:w-auto">
           <Plus size={18} /> Add Role
         </button>
       </div>

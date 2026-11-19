@@ -8,12 +8,14 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
+  SquarePen,
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import AddLeave from '../components/AddLeaves'
+import UpdateLeave from '../components/UpdateLeave.jsx'
 import Cookies from 'js-cookie'
 import { list_leave } from '../api/Leave/listLeave.js'
-// import { update_leave_status } from '../api/Leave/updateLeaveStatus.js'
+import { update_leave_status } from '../api/Leave/updateLeaveStatus.js'
 
 // Static part of the cards (numbers are calculated from leaves)
 const CARDS = [
@@ -286,6 +288,7 @@ const Leaves = () => {
   const isReviewer = type === ADMIN || type === HR
 
   const [isFormopen, setisFormopen] = useState(false)
+  const [editLeave, setEditLeave] = useState(null)
   const [leaves, setLeaves] = useState([])
   const [loading, setLoading] = useState(false)
 
@@ -429,7 +432,7 @@ const Leaves = () => {
 
       console.log("Update leave status response:", response)
 
-      if (response?.data?.status === 1) {
+      if (response?.status === 1) {
 
         // Reload the list so the row and the cards update
         await getLeaves()
@@ -437,7 +440,7 @@ const Leaves = () => {
       } else {
 
         alert(
-          response?.data?.message ||
+          response?.message ||
           `Failed to ${actionText} leave`
         )
 
@@ -447,7 +450,7 @@ const Leaves = () => {
 
       console.log("Update leave status error:", error)
 
-      alert(`Something went wrong while trying to ${actionText} the leave`)
+      alert(error.message || `Something went wrong while trying to ${actionText} the leave`)
 
     } finally {
 
@@ -463,6 +466,24 @@ const Leaves = () => {
   const handleReject = (item) =>
     updateStatus(item, LEAVE_STATUS.REJECTED)
 
+  // Keep the table in sync after an employee edits a pending request.
+  const handleLeaveUpdated = (id, response, form) => {
+    setLeaves((prev) =>
+      prev.map((item) =>
+        item._id === id
+          ? {
+              ...item,
+              leave_type: form.leave_type,
+              type: form.type,
+              from: form.from_date,
+              to: form.to_date,
+              reason: form.reason,
+            }
+          : item
+      )
+    )
+  }
+
   const handleDelete = (item) => {
     console.log("Delete leave:", item)
   }
@@ -472,11 +493,11 @@ const Leaves = () => {
 
       {/* Header */}
 
-      <div className="flex max-w-7xl max-auto justify-between items-start mt-5">
+      <div className="page-header">
 
-        <div className="max-w-80 ml-4">
+        <div className="min-w-0">
 
-          <h1 className="font-semibold text-2xl tracking-tight">
+          <h1 className="page-title">
             Leave requests
           </h1>
 
@@ -489,7 +510,7 @@ const Leaves = () => {
         {type === EMPLOYEE && (
           <button
             onClick={() => setisFormopen(true)}
-            className="min-w-30 py-2 px-2 flex justify-center items-center shadow-md mr-4 bg-[#6C63FF] text-white border border-[#6C63FF] rounded-xl transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:bg-indigo-600 font-semibold focus:outline-none"
+            className="primary-btn"
           >
             Apply for Leave
           </button>
@@ -502,13 +523,21 @@ const Leaves = () => {
           />
         )}
 
+        {editLeave && (
+          <UpdateLeave
+            leave={editLeave}
+            Close={() => setEditLeave(null)}
+            LeaveUpdated={handleLeaveUpdated}
+          />
+        )}
+
       </div>
 
 
       {/* Cards (Admin / HR only) */}
 
       {type !== EMPLOYEE && (
-        <div className="grid grid-cols-4 gap-4 mt-8 max-w-7xl max-auto ml-4 z-20">
+        <div className="stat-grid">
 
           {CARDS.map((card) => {
 
@@ -517,7 +546,7 @@ const Leaves = () => {
             return (
               <div
                 key={card.id}
-                className="flex flex-col gap-5 border border-[#E2E4ED] bg-[#FFFFFF] rounded-xl max-w-100 min-h-30 transition-shadow hover:shadow-md"
+                className="stat-card"
               >
 
                 <div className="flex justify-between items-center mt-3 pr-2">
@@ -558,33 +587,20 @@ const Leaves = () => {
 
       {/* Search */}
 
-      <div className="flex gap-3 max-w-7xl mx-auto mt-8 ml-4">
+      <div className="filter-bar">
 
-        <div className="relative flex-1 min-w-0">
+        <div className="relative w-full flex-1">
 
           <input
-            className="border w-full pl-10 rounded-xl py-2.5 transition-all border-[#E2E4ED] bg-[#FFFFFF] placeholder:text-[#A0A3B8] focus:outline-none focus:border-indigo-600 focus:shadow-md focus:shadow-indigo-200 text-sm"
+            className="search-input !pl-4"
             type="text"
-            placeholder="Search name,role,email..."
+            placeholder="Search leave...."
           />
 
         </div>
 
         <select
-          className="w-45 shrink-0 border rounded-xl text-[#A0A3B8] border-[#E2E4ED] bg-[#FFFFFF] focus:outline-none text-sm px-3 py-2.5 hover:cursor-pointer"
-        >
-          <option value="default">All Departments</option>
-          <option value="Engineering">Engineering</option>
-          <option value="Design">Design</option>
-          <option value="Marketing">Marketing</option>
-          <option value="Sales">Sales</option>
-          <option value="HR">HR</option>
-          <option value="Finance">Finance</option>
-          <option value="Operations">Operations</option>
-        </select>
-
-        <select
-          className="w-36 shrink-0 border rounded-xl text-[#A0A3B8] border-[#E2E4ED] bg-[#FFFFFF] focus:outline-none text-sm px-3 py-2.5 hover:cursor-pointer"
+          className="filter-select"
         >
           <option value="default">All Statuses</option>
           <option value="1">Pending</option>
@@ -597,9 +613,9 @@ const Leaves = () => {
 
       {/* Leave Table */}
 
-      <div className="mt-8 ml-4 max-w-7xl mx-auto">
+      <div className="table-shell">
 
-        <table className="rounded-2xl border shadow-sm bg-[#FFFFFF] border-[#E2E4ED] table-auto overflow-hidden w-full">
+        <table className="data-table min-w-[900px]">
 
           <thead>
 
@@ -613,13 +629,11 @@ const Leaves = () => {
                 "Applied",
                 "Status",
                 "Action"
-              ].map((h, i) => (
+              ].map((h) => (
 
                 <th
                   key={h}
-                  className={`py-3 px-4 uppercase text-xs font-semibold tracking-wide text-[#A0A3B8] text-left ${
-                    i === 0 ? 'pl-6' : ''
-                  }`}
+                  className="th-cell !text-left"
                 >
                   {h}
                 </th>
@@ -671,6 +685,9 @@ const Leaves = () => {
                 // Approve / Reject only for Admin or HR, and only while pending
                 const canReview = isPending && isReviewer
 
+                // Employee may edit only while the request is still pending.
+                const canEdit = isPending && type === EMPLOYEE
+
                 const isProcessing = processingId === item._id
 
                 return (
@@ -682,7 +699,7 @@ const Leaves = () => {
 
                     {/* Employee */}
 
-                    <td className="pl-6 pr-4 py-4">
+                    <td className="td-cell !text-left">
 
                       <div className="flex items-center gap-3">
 
@@ -713,7 +730,7 @@ const Leaves = () => {
 
                     {/* Leave type */}
 
-                    <td className="px-4 py-4">
+                    <td className="td-cell">
 
                       {LEAVE_TYPES[item.leave_type] ? (
 
@@ -732,7 +749,7 @@ const Leaves = () => {
 
                     {/* Duration */}
 
-                    <td className="px-4 py-4">
+                    <td className="td-cell">
 
                       <div className="flex flex-col">
 
@@ -752,7 +769,7 @@ const Leaves = () => {
                     {/* Reason */}
 
                     <td
-                      className="px-4 py-4 text-sm text-[#64748B] max-w-52 truncate"
+                      className="td-cell max-w-52 truncate !text-left text-[#64748B]"
                       title={item.reason}
                     >
                       {item.reason || "-"}
@@ -761,14 +778,14 @@ const Leaves = () => {
 
                     {/* Applied */}
 
-                    <td className="px-4 py-4 text-sm text-[#94A3B8] whitespace-nowrap">
+                    <td className="td-cell text-[#94A3B8]">
                       {fullDate(getAppliedDate(item))}
                     </td>
 
 
                     {/* Status */}
 
-                    <td className="px-4 py-4">
+                    <td className="td-cell">
 
                       {status ? (
 
@@ -793,11 +810,28 @@ const Leaves = () => {
                     </td>
 
 
-                    {/* Actions: Approve / Reject / Delete */}
+                    {/* Actions: Update (employee, pending only) / Approve / Reject / Delete */}
 
-                    <td className="px-4 py-4">
+                    <td className="td-cell">
 
                       <div className="flex items-center gap-2">
+
+                        {canEdit && (
+
+                          <button
+                            type="button"
+                            onClick={() => setEditLeave(item)}
+                            title="Update leave"
+                            className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3 text-sm font-semibold text-indigo-600 transition-colors hover:bg-indigo-100"
+                          >
+
+                            <SquarePen size={15} />
+
+                            Update
+
+                          </button>
+
+                        )}
 
                         {canReview && (
 
@@ -867,7 +901,7 @@ const Leaves = () => {
 
         {showPagination ? (
 
-          <div className="flex justify-between items-center mt-4 mb-8">
+          <div className="mb-8 mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
             <div className="flex items-center gap-2 text-sm text-[#64748B]">
 

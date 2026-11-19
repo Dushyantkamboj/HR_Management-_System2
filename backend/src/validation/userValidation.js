@@ -168,3 +168,32 @@ export const change_password_schema = joi.object({
 
   confirm_password: joi.any().valid(joi.ref('new_password')).required()
 });
+
+export const forgot_password_schema=joi.object({
+  email:joi.string().email().required()
+})
+
+const strong_password = joi
+  .string()
+  .min(8)
+  .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
+  .messages({
+    "string.min": "Password must be at least 8 characters long",
+    "string.pattern.base": "Password must contain uppercase, lowercase, number and special character",
+  })
+  .required();
+
+export const verify_reset_token_schema=joi.object({
+  token:joi.string().required(),
+  email:joi.string().email().required()
+})
+
+export const reset_password_schema=joi.object({
+  token:joi.string().required(),
+  email:joi.string().email().required(),
+  password:strong_password,
+  confirm_password:joi.any().valid(joi.ref('password')).required().messages({
+    "any.only": "Passwords do not match",
+    "any.required": "Please confirm your password",
+  })
+})

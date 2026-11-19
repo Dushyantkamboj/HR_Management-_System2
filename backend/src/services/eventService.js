@@ -96,6 +96,7 @@ export const add_event_service = async (payload) => {
     const events = db.collection("events");
 
     const data = {
+      _id:new ObjectId(),
       title: payload.title,
       category: payload.category,
       status: payload.status,
@@ -113,11 +114,14 @@ export const add_event_service = async (payload) => {
     };
 
     await events.insertOne(data);
+
     return {
       status: 1,
       status_code: status_code.CREATED,
       message: response_message.eventAdded,
+      data:data
     };
+
   } catch (error) {
     throw {
       status: 0,

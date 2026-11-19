@@ -4,6 +4,7 @@ import { UserContext } from "./UserContext";
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [current, setCurrent] = useState("Dashboard");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <UserContext.Provider
@@ -12,6 +13,8 @@ const UserContextProvider = ({ children }) => {
         setUser,
         current,
         setCurrent,
+        isSidebarOpen,
+        setIsSidebarOpen,
       }}
     >
       {children}

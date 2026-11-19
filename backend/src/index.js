@@ -1,195 +1,39 @@
-// import express from "express";
-// import dotenv from "dotenv";
-// import cors from "cors";
-// import { adminRoute } from "./route/adminRoute.js";
-// import { userRoute } from "./route/userRoute.js";
-// import { eventRoute } from "./route/eventRoute.js";
-// import { attendanceRoute } from "./route/attendanceRoute.js";
-// import { leaveRoute } from "./route/leaveRoute.js";
-
-// const app = express();
-// dotenv.config();
-
-// const port = process.env.PORT;
-// const api_v1 = process.env.API_VERSION;
-
-// app.use(express.json());
-
-// app.use(
-//   cors({
-//     // origin: "http://localhost:5173",
-//     origin: process.env.CLIENT_URL,
-//   }),
-// );
-
-// app.get("/", (req, res) => {
-//     res.json({
-//         success: true,
-//         message: "Backend is running successfully"
-//     });
-// });
-
-// app.use(`/${api_v1}/admin`, adminRoute);
-// app.use(`/${api_v1}/user`,userRoute);
-// app.use(`/${api_v1}/event`,eventRoute);
-// app.use(`/${api_v1}/attendance`,attendanceRoute)
-// app.use(`/${api_v1}/leave`,leaveRoute)
-
-// app.get(`/${api_v1}`, (req, res) => {
-//   res.send("hello world");
-// });
-
-// app.listen(`${port}`, () => {
-//   console.log(`The app listen on the port ${port}`);
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import express from "express";
-// import dotenv from "dotenv";
-// import cors from "cors";
-
-// import { adminRoute } from "./route/adminRoute.js";
-// import { userRoute } from "./route/userRoute.js";
-// import { eventRoute } from "./route/eventRoute.js";
-// import { attendanceRoute } from "./route/attendanceRoute.js";
-// import { leaveRoute } from "./route/leaveRoute.js";
-
-// dotenv.config();
-
-// const app = express();
-
-// const api_v1 = process.env.API_VERSION;
-
-// app.use(express.json());
-
-// // app.use(
-// //   cors({
-// //     origin: process.env.CLIENT_URL,
-// //     credentials: true,
-// //   })
-// // );
-
-// const corsOptions = {
-//   origin: "https://hr-management-system2-r8jn-frontend.vercel.app",
-//   credentials: true,
-//   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-// };
-
-// app.use(cors(corsOptions));
-
-// app.get("/", (req, res) => {
-//   res.json({
-//     success: true,
-//     message: "Backend is running successfully",
-//   });
-// });
-
-// app.use(`/${api_v1}/admin`, adminRoute);
-// app.use(`/${api_v1}/user`, userRoute);
-// app.use(`/${api_v1}/event`, eventRoute);
-// app.use(`/${api_v1}/attendance`, attendanceRoute);
-// app.use(`/${api_v1}/leave`, leaveRoute);
-
-// app.get(`/${api_v1}`, (req, res) => {
-//   res.send("hello world");
-// });
-
-// export default app;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-
 import { adminRoute } from "./route/adminRoute.js";
 import { userRoute } from "./route/userRoute.js";
 import { eventRoute } from "./route/eventRoute.js";
 import { attendanceRoute } from "./route/attendanceRoute.js";
 import { leaveRoute } from "./route/leaveRoute.js";
 
+const app = express();
 dotenv.config();
 
-const app = express();
-
+const port = process.env.PORT;
 const api_v1 = process.env.API_VERSION;
 
 app.use(express.json());
 
-const corsOptions = {
-    origin: "https://hr-management-system2-r8jn-frontend.vercel.app",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOptions));
-
-app.get("/", (req, res) => {
-    res.json({
-        success: true,
-        message: "Backend is running successfully",
-    });
-});
+app.use(cors({
+    origin: [
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      process.env.FRONTEND_URL
+    ].filter(Boolean),
+  })
+);
 
 app.use(`/${api_v1}/admin`, adminRoute);
-app.use(`/${api_v1}/user`, userRoute);
-app.use(`/${api_v1}/event`, eventRoute);
-app.use(`/${api_v1}/attendance`, attendanceRoute);
-app.use(`/${api_v1}/leave`, leaveRoute);
+app.use(`/${api_v1}/user`,userRoute);
+app.use(`/${api_v1}/event`,eventRoute);
+app.use(`/${api_v1}/attendance`,attendanceRoute)
+app.use(`/${api_v1}/leave`,leaveRoute)
 
 app.get(`/${api_v1}`, (req, res) => {
-    res.send("hello world");
+  res.send("hello world");
 });
 
-if (process.env.NODE_ENV !== "production") {
-    const PORT = process.env.PORT || 3000;
-
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
-}
-
-export default app;
+app.listen(`${port}`, () => {
+  console.log(`The app listen on the port ${port}`);
+});

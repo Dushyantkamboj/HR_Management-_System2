@@ -1,15 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { list_employee } from "../api/user/listUser";
 import { useState, useEffect } from "react";
-import {
-  UserRound,
-  Check,
-  UserRoundMinus,
-  CreditCard,
-  Search,
-  Trash,
-  Pencil,
-} from "lucide-react";
+import {UserRound, Check, UserRoundMinus, CreditCard, Search, Trash, Pencil} from "lucide-react";
 import AddEmployee from "../components/AddEmployee";
 import DeleteEmployee from "../components/DeleteEmployee";
 import EditEmployee from "../components/EditEmployee";
@@ -24,7 +16,7 @@ const Employee = () => {
   const [pagination, setPagination] = useState({
     currentPage: 1,
     limit: 10,
-  totalEmployees: 0,
+    totalEmployees: 0,
     totalPages: 1,
   });
 
@@ -166,16 +158,16 @@ useEffect(() => {
 
   return (
     <>
-      <div className="flex max-w-7xl max-auto justify-between items-start mt-5">
-        <div className="max-w-80 ml-4">
-          <h1 className="font-semibold text-2xl tracking-tight">Employees</h1>
+      <div className="page-header">
+        <div className="min-w-0">
+          <h1 className="page-title">Employees</h1>
           <p className="text-[#6B6D8A]">
             {tableArr.length} teams members accross 7 departments
           </p>
         </div>
         <button
           onClick={() => setisFormopen(true)}
-          className="min-w-40 py-2  flex justify-center items-center shadow-md mr-4 bg-[#6C63FF] text-white border border-[#6C63FF] rounded-xl transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:bg-indigo-600  font-semibold focus:outline-none"
+          className="primary-btn"
         >
           + Add Employee
         </button>
@@ -186,12 +178,12 @@ useEffect(() => {
           />
         )}
       </div>
-      <div className="grid grid-cols-4 gap-4 mt-8 max-w-7xl max-auto ml-4 z-20">
+      <div className="stat-grid">
         {data.map((items) => {
           return (
             <div
               key={items.id}
-              className="flex flex-col gap-5 border border-[#E2E4ED] bg-[#FFFFFF] rounded-xl max-w-90 min-h-30 transition-shadow hover:shadow-md"
+              className="stat-card"
             >
               <div className="flex justify-between items-center mt-3 pr-2">
                 <span className="text-[#A0A3B8] text-sm font-medium ml-2">
@@ -208,16 +200,16 @@ useEffect(() => {
           );
         })}
       </div>
-      <div className="flex gap-3 max-w-7xl mx-auto  mt-8 ml-4">
-        <div className="relative flex items-center w-full">
-          <Search className="absolute ml-2 text-[#A0A3B8]" size={20} />
+      <div className="filter-bar">
+        <div className="relative flex w-full items-center">
+          <Search className="absolute left-3 text-[#A0A3B8]" size={20} />
           <input
-            className="border w-full pl-10 rounded-xl py-2.5 transition-all border-[#E2E4ED] bg-[#FFFFFF] placeholder:text-[#A0A3B8] focus:outline-none focus:border-indigo-600 focus:shadow-md focus:shadow-indigo-200 text-sm"
+            className="search-input"
             type="text"
             placeholder="Search name,role,email..."
           />
         </div>
-        <select className="border rounded-xl text-[#A0A3B8]  border-[#E2E4ED] bg-[#FFFFFF] focus:outline-none text-sm px-3 py-2.5 hover:cursor-pointer">
+        <select className="filter-select">
           <option value="default">All Departments</option>
           <option value="Engineering">Engineering</option>
           <option value="Design">Design</option>
@@ -227,41 +219,41 @@ useEffect(() => {
           <option value="Finance">Finance</option>
           <option value="Operations">Operations</option>
         </select>
-        <select className="border rounded-xl text-[#A0A3B8]  border-[#E2E4ED] bg-[#FFFFFF] focus:outline-none text-sm px-3 py-2.5 hover:cursor-pointer">
+        <select className="filter-select">
           <option value="default">All Statuses</option>
           <option value="Active">Active</option>
           <option value="Active">In Active</option>
         </select>
       </div>
-      <div className="mt-8 ml-4 max-w-7xl mx-auto ">
-        <table className="rounded-2xl border shadow-sm bg-[#FFFFFF] border-[#E2E4ED] table-auto overflow-hidden w-full ">
+      <div className="table-shell">
+        <table className="data-table min-w-[900px]">
           <thead>
             <tr className="border-b border-[#E2E4ED] bg-[#FAFBFF]">
-              <th className="text-center py-2 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Employee Name
               </th>
-              <th className="text-center py-2 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Department
               </th>
-              <th className="text-center py-2 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Phone
               </th>
-              <th className="text-center py-2 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Location
               </th>
-              <th className="text-center py-2 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Joined
               </th>
-              <th className="text-center py-2 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Role
               </th>
-              <th className="text-center py-2 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Status
               </th>
-              <th className="text-center py-2 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Salary
               </th>
-              <th className="text-center py-2 uppercase text-sm font-semibold text-[#A0A3B8]">
+              <th className="th-cell">
                 Action
               </th>
             </tr>
@@ -292,15 +284,15 @@ useEffect(() => {
                       </div>
                     </div>
                   </td>
-                  <td className="text-center px-5 py-4">
+                  <td className="td-cell">
                     {employee.department}
                   </td>
-                  <td className="text-center px-5 py-4">{employee.phone}</td>
-                  <td className="text-center px-5 py-4">{employee.location}</td>
-                  <td className="text-center px-5 py-4 text-[#6B6D8A]">
+                  <td className="td-cell">{employee.phone}</td>
+                  <td className="td-cell">{employee.location}</td>
+                  <td className="td-cell text-[#6B6D8A]">
                     {employee.joining_date}
                   </td>
-                  <td className="text-center px-5 py-4">
+                  <td className="td-cell">
                     {employee.type === 2 ? "HR" : "Employee"}
                   </td>
                   <td className="flex justify-center items-center px-5 py-4">
@@ -332,7 +324,7 @@ useEffect(() => {
                       </p>
                     </div>
                   </td>
-                  <td className="text-center px-5 py-4 text-[#1A1A2E] font-medium">
+                  <td className="td-cell font-medium text-[#1A1A2E]">
                     ${employee.salary}
                   </td>
                   <td className="flex gap-4 justify-center items-center ">
@@ -365,12 +357,12 @@ useEffect(() => {
           </tbody>
         </table>
         {pagination.totalEmployees >= 10 && (
-          <div className="flex justify-between items-center mt-4 mb-5">
+          <div className="mt-4 mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-[#6B6D8A]">
               Page {pagination.currentPage} of {pagination.totalPages}
             </p>
 
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 disabled={pagination.currentPage === 1}
                 onClick={() => handlePageChange(pagination.currentPage - 1)}

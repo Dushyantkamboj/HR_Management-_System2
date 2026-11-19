@@ -4,6 +4,7 @@ const name=Cookies.get('name')
 
 const type=()=>{
 const currentDate = new Date();
+
 const hour = currentDate.getHours();
 
 if (hour < 12) {
@@ -16,10 +17,6 @@ else {
     return "Good Evening";
 }
 }
-
-console.log(type());
-
-
 
 const Header = ({
     userName = name,
@@ -39,8 +36,7 @@ const Header = ({
 
     return (
         <div
-            className="relative overflow-hidden rounded-2xl px-8 py-6 flex items-center justify-between
-      "
+            className="relative flex items-center justify-between overflow-hidden rounded-2xl px-4 py-5 sm:px-8 sm:py-6"
             style={{
                 background:
                     'radial-gradient(circle at 30% 0%, #2A3374 0%, #0F1229 55%, #0B0D1F 100%)',
@@ -49,20 +45,20 @@ const Header = ({
 
             {/* LEFT: Date, Greeting, Stats */}
 
-            <div className="flex flex-col gap-2">
+            <div className="flex min-w-0 flex-col gap-2">
 
                 <span className="text-[#8B92C4] text-xs font-semibold tracking-wide">
                     {formattedDate.split(' ').join(' · ', 1)}
                 </span>
 
-                <h1 className="text-white text-3xl font-bold flex items-center gap-2">
-                    {type}, {userName}
+                <h1 className="flex flex-wrap items-center gap-2 text-xl font-bold text-white sm:text-3xl">
+                    {type()}, {userName}
                     <span role="img" aria-label="wave">
                         👋
                     </span>
                 </h1>
 
-                <div className="flex items-center gap-2 text-sm text-[#A7ACC8] mt-1">
+                <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[#A7ACC8] sm:text-sm">
                     <span className="flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
                         {pendingLeaveRequests} leave requests pending

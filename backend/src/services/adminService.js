@@ -90,6 +90,7 @@ export const admin_login_service=async(payload)=>{
         const data={
             userId:userExist._id,
             name:userExist.name,
+            email:userExist.email,
             type:userExist.type,
             status:userExist.status
         }
