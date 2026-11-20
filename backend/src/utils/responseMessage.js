@@ -18,6 +18,7 @@ export const response_message = {
     // Login / Authentication
     loginSuccess: "Login successful",
     loginFailed: "Invalid email or password",
+    adminOnly: "Only administrators can log in from this page",
     logoutSuccess: "Logout successful",
     unauthorized: "Unauthorized access",
     forbidden: "You do not have permission to access this resource",

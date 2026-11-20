@@ -74,6 +74,35 @@ export const list_employee_service = async (payload) => {
       type: { $ne: 1 },
     };
 
+    const search = (payload.search || "").trim();
+    if (search) {
+      const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escaped, "i");
+
+      condition.$or = [
+        { name: { $regex: regex } },
+        { email: { $regex: regex } },
+        { phone: { $regex: regex } },
+        { department: { $regex: regex } },
+        { location: { $regex: regex } },
+      ];
+
+      const role = search.toLowerCase();
+      if (role === "hr") {
+        condition.$or.push({ type: 2 });
+      } else if (role === "employee") {
+        condition.$or.push({ type: { $ne: 2 } });
+      }
+    }
+
+    if (payload.department && payload.department !== "default") {
+      condition.department = payload.department;
+    }
+
+    if (payload.status === "Active" || payload.status === "InActive") {
+      condition.status = payload.status === "Active" ? 1 : { $ne: 1 };
+    }
+
     const totalEmployee = await users.countDocuments(condition);
 
     const userList = await users

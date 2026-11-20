@@ -628,7 +628,7 @@ const Events = () => {
 
 
       {/* ================= PAGINATION ================= */}
-{pagination.totalEvents >= 10 && (
+{(pagination.totalevents >= 10 || pagination.totalPages > 1) && (
       <div className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:justify-end sm:mr-4">
 
         <button

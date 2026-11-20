@@ -3,10 +3,17 @@ import Header from '../components/Header';
 import { Users, UserCheck, UserX, MapPin} from 'lucide-react';
 
 import { list_employee } from '../api/user/listUser';
+import { on_leave_today } from '../api/Leave/onLeaveToday';
 import ReactApexChart from 'react-apexcharts';
 
 const Dashboard = () => {
   const [tablearr, settablearr] = useState([]);
+  const [onLeaveData, setOnLeaveData] = useState({
+    count: 0,
+    annual: 0,
+    sick: 0,
+    employees: [],
+  });
 
   // =========================
   // GET EMPLOYEES
@@ -14,9 +21,9 @@ const Dashboard = () => {
   useEffect(() => {
     const handleResult = async () => {
       try {
-        const result = await list_employee(1, 10);
+        const result = await list_employee(1, 1000);
 
-        settablearr(result.data.employees || []);
+        settablearr(result?.data?.employees || []);
         
       } catch (error) {
         console.log("error:", error);
@@ -24,6 +31,25 @@ const Dashboard = () => {
     };
 
     handleResult();
+  }, []);
+
+  // =========================
+  // ON LEAVE TODAY (approved leaves covering the current day)
+  // =========================
+  useEffect(() => {
+    const fetchOnLeave = async () => {
+      try {
+        const result = await on_leave_today();
+
+        if (result?.status) {
+          setOnLeaveData(result.data || {});
+        }
+      } catch (error) {
+        console.log('On leave today error:', error);
+      }
+    };
+
+    fetchOnLeave();
   }, []);
 
   // =========================
@@ -41,9 +67,48 @@ const Dashboard = () => {
   });
 
   // =========================
-  // ON LEAVE (placeholder until real field exists on employee)
+  // ON LEAVE
   // =========================
-  const onLeaveCount = 0;
+  const onLeaveCount = onLeaveData.count || 0;
+  const onLeaveAnnual = onLeaveData.annual || 0;
+  const onLeaveSick = onLeaveData.sick || 0;
+  const onLeaveNames = onLeaveData.employees || [];
+
+  // =========================
+  // DYNAMIC PERCENTAGES
+  // =========================
+  const totalEmployees = tablearr.length;
+
+  const share = (value) =>
+    totalEmployees ? ((value / totalEmployees) * 100).toFixed(1) : "0.0";
+
+  const activePercent = share(activeEmployee.length);
+  const inactivePercent = share(inactiveEmployee.length);
+  const onLeavePercent = share(onLeaveCount);
+
+  const parseDate = (value) => {
+    if (!value) return null;
+    if (value instanceof Date) return isNaN(value) ? null : value;
+
+    if (typeof value === "string") {
+      const iso = value.trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      if (iso) {
+        return new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]));
+      }
+    }
+
+    const d = new Date(value);
+    return isNaN(d) ? null : d;
+  };
+
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  weekAgo.setHours(0, 0, 0, 0);
+
+  const newHiresThisWeek = tablearr.filter((employee) => {
+    const joined = parseDate(employee.joining_date);
+    return joined && joined >= weekAgo && joined <= new Date();
+  }).length;
 
   // =====================================================
   // LEAVE TRENDS CHART
@@ -381,9 +446,9 @@ const Dashboard = () => {
     {
       id: 1,
       label: 'Total Employees',
-      subtext: '3 new hires this week',
-      number: tablearr.length,
-      badge: '↑ 2.4%',
+      subtext: `${newHiresThisWeek} new hire${newHiresThisWeek === 1 ? '' : 's'} this week`,
+      number: totalEmployees,
+      badge: `+${share(newHiresThisWeek)}%`,
       badgeColor: '#16A34A',
       badgeBg: '#EAF7EF',
       iconBg: '#EEF1FE',
@@ -395,9 +460,9 @@ const Dashboard = () => {
     {
       id: 2,
       label: 'Active Employees',
-      subtext: '87.1% of total workforce',
+      subtext: `${activePercent}% of total workforce`,
       number: activeEmployee.length,
-      badge: '↑ 1.2%',
+      badge: `${activeEmployee.length} employees`,
       badgeColor: '#16A34A',
       badgeBg: '#EAF7EF',
       iconBg: '#E7F8EF',
@@ -409,9 +474,9 @@ const Dashboard = () => {
     {
       id: 3,
       label: 'Inactive Employees',
-      subtext: '5.6% of total · 3 resigned',
+      subtext: `${inactivePercent}% of total workforce`,
       number: inactiveEmployee.length,
-      badge: '↓ 2 fewer',
+      badge: `${inactiveEmployee.length} employees`,
       badgeColor: '#DC2626',
       badgeBg: '#FCEAEC',
       iconBg: '#FDECEF',
@@ -423,9 +488,12 @@ const Dashboard = () => {
     {
       id: 4,
       label: 'On Leave',
-      subtext: '0 annual · 0 sick leave',
+      subtext: `${onLeaveAnnual} annual · ${onLeaveSick} sick leave`,
       number: onLeaveCount,
-      badge: '— Same',
+      title: onLeaveNames.length
+        ? `On leave today: ${onLeaveNames.join(', ')}`
+        : 'No one is on leave today',
+      badge: `${onLeavePercent}%`,
       badgeColor: '#8B95A7',
       badgeBg: '#F1F2F6',
       iconBg: '#FEF3E7',
@@ -453,7 +521,11 @@ const Dashboard = () => {
           const Icon = card.icon;
 
           return (
-            <div key={card.id} className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-[#EDEFF5] bg-white p-4 sm:p-5">
+            <div
+              key={card.id}
+              title={card.title}
+              className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-[#EDEFF5] bg-white p-4 sm:p-5"
+            >
 
               {/* Decorative blob */}
 

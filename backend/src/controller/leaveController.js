@@ -1,4 +1,4 @@
-import { list_leave_Service,add_leave_service, update_leave_service,status_leave_service, delete_leave_service } from "../services/leaveService.js";
+import { list_leave_Service,add_leave_service, update_leave_service,status_leave_service, delete_leave_service, on_leave_today_service } from "../services/leaveService.js";
 
 export const list_leave_controller=async(req,res)=>{
 
@@ -80,6 +80,19 @@ export const leave_status_controller=async(req,res)=>{
 export const delete_leave_controller=async(req,res)=>{
     try {
         const response=await delete_leave_service(req.body);
+        return res.status(response.status_code).json(response);
+    } catch (error) {
+        return res.status(400).json({
+            status:0,
+            status_code:400,
+            message:error.message
+        })
+    }
+}
+
+export const on_leave_today_controller=async(req,res)=>{
+    try {
+        const response=await on_leave_today_service();
         return res.status(response.status_code).json(response);
     } catch (error) {
         return res.status(400).json({

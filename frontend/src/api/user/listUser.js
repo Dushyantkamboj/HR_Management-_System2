@@ -29,14 +29,28 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 
 
-export const list_employee = async (page, limit) => {
+export const list_employee = async (
+  page,
+  limit,
+  search = "",
+  department = "",
+  status = ""
+) => {
 
   const token = Cookies.get("accessToken");
 
   try {
 
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+      search: search || "",
+      department: department || "",
+      status: status || "",
+    });
+
     const response = await axios.get(
-      `http://localhost:3000/api_v1/user/list?page=${page}&limit=${limit}`,
+      `http://localhost:3000/api_v1/user/list?${params.toString()}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

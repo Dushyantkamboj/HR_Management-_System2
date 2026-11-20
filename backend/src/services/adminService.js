@@ -73,7 +73,7 @@ export const admin_login_service=async(payload)=>{
             return {
                 status:0,
                 status_code:status_code.NOT_FOUND,
-                message:response_message.notExistUser
+                message:response_message.adminOnly
             }
         }
 

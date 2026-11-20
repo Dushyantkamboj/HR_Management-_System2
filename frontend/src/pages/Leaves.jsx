@@ -10,7 +10,7 @@ import {
   ChevronRight,
   SquarePen,
 } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import AddLeave from '../components/AddLeaves'
 import UpdateLeave from '../components/UpdateLeave.jsx'
 import Cookies from 'js-cookie'
@@ -300,8 +300,15 @@ const Leaves = () => {
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
 
-  // List Leave API (page and limit are sent to the backend)
+  // Filters
+  const [search, setSearch] = useState("")
+  const [statusFilter, setStatusFilter] = useState("default")
+  const requestIdRef = useRef(0)
+
+  // List Leave API (page, limit and filters are sent to the backend)
   const getLeaves = async () => {
+
+    const requestId = ++requestIdRef.current
 
     try {
 
@@ -309,10 +316,15 @@ const Leaves = () => {
 
       const response = await list_leave({
         page,
-        limit
+        limit,
+        search,
+        status: statusFilter
       })
 
       console.log("Leave List Response:", response)
+
+      // Ignore responses from older requests (e.g. fast typing)
+      if (requestId !== requestIdRef.current) return
 
       if (response?.data?.status === 1) {
 
@@ -344,16 +356,28 @@ const Leaves = () => {
 
     } finally {
 
-      setLoading(false)
+      if (requestId === requestIdRef.current) {
+        setLoading(false)
+      }
 
     }
 
   }
 
-  // Reload the list when page or limit changes
+  // Reload the list when page, limit or a filter changes
   useEffect(() => {
     getLeaves()
-  }, [page, limit])
+  }, [page, limit, search, statusFilter])
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value)
+    setPage(1)
+  }
+
+  const handleStatusChange = (e) => {
+    setStatusFilter(e.target.value)
+    setPage(1)
+  }
 
   const totalPages =
     total > 0
@@ -367,11 +391,9 @@ const Leaves = () => {
 
   const hasPrev = page > 1
 
-  // Show pagination only when there is more than one page of records
+  // Show pagination once the first page is full (10+ records)
   const showPagination =
-    total > 0
-      ? total > LIMIT_OPTIONS[0]
-      : page > 1 || leaves.length >= limit
+    total >= 10 || totalPages > 1 || page > 1 || leaves.length >= limit
 
   const handleLimitChange = (e) => {
     setLimit(Number(e.target.value))
@@ -594,6 +616,8 @@ const Leaves = () => {
           <input
             className="search-input !pl-4"
             type="text"
+            value={search}
+            onChange={handleSearchChange}
             placeholder="Search leave...."
           />
 
@@ -601,6 +625,8 @@ const Leaves = () => {
 
         <select
           className="filter-select"
+          value={statusFilter}
+          onChange={handleStatusChange}
         >
           <option value="default">All Statuses</option>
           <option value="1">Pending</option>
@@ -665,7 +691,9 @@ const Leaves = () => {
                   colSpan="7"
                   className="text-center py-8 text-[#94A3B8]"
                 >
-                  No leave requests found
+                  {search || statusFilter !== "default"
+                    ? "No leave requests match your search."
+                    : "No leave requests found"}
                 </td>
               </tr>
 

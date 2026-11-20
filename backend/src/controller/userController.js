@@ -360,6 +360,17 @@ export const login_employee_controller = async (req, res) => {
 
     }
 
+    // Admins must use the dedicated /admin/login page
+    if (Number(userExist.data.type) === 1) {
+
+      return res.status(status_code.FORBIDDEN).json({
+        status: 0,
+        status_code: status_code.FORBIDDEN,
+        message: response_message.forbidden,
+      });
+
+    }
+
     // Don't allow inactive user to login
     if (!userExist.data.status) {
 

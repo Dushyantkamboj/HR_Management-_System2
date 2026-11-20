@@ -154,6 +154,9 @@ export const delete_employee_schema = joi.object({
 export const list_employee_schema = joi.object({
   page: joi.string().required(),
   limit: joi.string().required(),
+  search: joi.string().allow("").optional(),
+  department: joi.string().allow("").optional(),
+  status: joi.string().allow("").optional(),
 });
 
 export const employee_login_schema=joi.object({

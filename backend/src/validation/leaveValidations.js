@@ -3,7 +3,9 @@ import joi from "joi";
 
 export const list_leave_schema=joi.object({
     page:joi.number().required(),
-    limit:joi.number().required()
+    limit:joi.number().required(),
+    search:joi.string().allow("").optional(),
+    status:joi.string().allow("").optional()
 });
 
 export const add_leave_schema = joi.object({

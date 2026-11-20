@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { list_employee } from "../api/user/listUser";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {UserRound, Check, UserRoundMinus, CreditCard, Search, Trash, Pencil} from "lucide-react";
 import AddEmployee from "../components/AddEmployee";
 import DeleteEmployee from "../components/DeleteEmployee";
@@ -13,6 +13,10 @@ const Employee = () => {
   const [editEmployee, setEditEmployee] = useState(null);
   const [deleteEmployeeId, setDeleteEmployeeId] = useState(null);
   const [deleteEmployeeName, setDeleteEmployeeName] = useState("");
+  const [search, setSearch] = useState("");
+  const [department, setDepartment] = useState("default");
+  const [status, setStatus] = useState("default");
+  const requestIdRef = useRef(0);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     limit: 10,
@@ -32,11 +36,16 @@ const Employee = () => {
 
 const getEmployees = async () => {
 
+  const requestId = ++requestIdRef.current;
+
   try {
 
     const result = await list_employee(
       pagination.currentPage,
-      10
+      10,
+      search,
+      department,
+      status
     );
 
     console.log(
@@ -44,7 +53,7 @@ const getEmployees = async () => {
       result
     );
 
-    if (!result?.status) {
+    if (!result?.status || requestId !== requestIdRef.current) {
       return;
     }
 
@@ -73,6 +82,11 @@ const getEmployees = async () => {
       ...prev,
       currentPage: page,
     }));
+  };
+
+  const handleFilterChange = (setter) => (event) => {
+    setter(event.target.value);
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
   };
 
 
@@ -110,7 +124,7 @@ const handleEmployeeUpdated = (updatedEmployee) => {
 
 useEffect(() => {
   getEmployees();
-},[pagination.currentPage]);
+}, [pagination.currentPage, search, department, status]);
 
   const activeEmployee = tableArr.filter((total) => {
     return total.status === 1;
@@ -206,10 +220,16 @@ useEffect(() => {
           <input
             className="search-input"
             type="text"
+            value={search}
+            onChange={handleFilterChange(setSearch)}
             placeholder="Search name,role,email..."
           />
         </div>
-        <select className="filter-select">
+        <select
+          className="filter-select"
+          value={department}
+          onChange={handleFilterChange(setDepartment)}
+        >
           <option value="default">All Departments</option>
           <option value="Engineering">Engineering</option>
           <option value="Design">Design</option>
@@ -219,10 +239,14 @@ useEffect(() => {
           <option value="Finance">Finance</option>
           <option value="Operations">Operations</option>
         </select>
-        <select className="filter-select">
+        <select
+          className="filter-select"
+          value={status}
+          onChange={handleFilterChange(setStatus)}
+        >
           <option value="default">All Statuses</option>
           <option value="Active">Active</option>
-          <option value="Active">In Active</option>
+          <option value="InActive">In Active</option>
         </select>
       </div>
       <div className="table-shell">
@@ -259,6 +283,16 @@ useEffect(() => {
             </tr>
           </thead>
           <tbody>
+            {tableArr.length === 0 && (
+              <tr>
+                <td
+                  colSpan={9}
+                  className="td-cell text-center text-[#6B6D8A] py-10"
+                >
+                  No employees match your search.
+                </td>
+              </tr>
+            )}
             {tableArr.map((employee) => {
               const isActive = employee.status === 1;
 
@@ -356,7 +390,7 @@ useEffect(() => {
             })}
           </tbody>
         </table>
-        {pagination.totalEmployees >= 10 && (
+        {(pagination.totalEmployees >= 10 || pagination.totalPages > 1) && (
           <div className="mt-4 mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-[#6B6D8A]">
               Page {pagination.currentPage} of {pagination.totalPages}

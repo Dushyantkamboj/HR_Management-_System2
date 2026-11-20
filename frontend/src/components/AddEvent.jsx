@@ -2,6 +2,7 @@ import { CalendarDays, X, Info } from 'lucide-react';
 import { motion } from "framer-motion"
 import { useState } from 'react';
 import { add_event } from '../api/event/addEvent';
+import TimePicker from './TimePicker';
 
 const AddEvent = ({ Close, eventAdded }) => {
     const [formData, setformData] = useState({
@@ -17,7 +18,8 @@ const AddEvent = ({ Close, eventAdded }) => {
     });
 
     const handleChange = (e) => {
-        setformData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setformData((previous) => ({ ...previous, [name]: value }));
     };
 
     const handleSubmit = async () => {
@@ -106,11 +108,19 @@ const AddEvent = ({ Close, eventAdded }) => {
                                 <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
                                     <div>
                                         <label className="modal-label">Starts*</label>
-                                        <input name="starts" value={formData.starts} onChange={handleChange} className="modal-input" type="time" />
+                                        <TimePicker
+                                            name="starts"
+                                            value={formData.starts}
+                                            onChange={handleChange}
+                                        />
                                     </div>
                                     <div>
                                         <label className="modal-label">Ends*</label>
-                                        <input name="ends" value={formData.ends} onChange={handleChange} className="modal-input" type="time" />
+                                        <TimePicker
+                                            name="ends"
+                                            value={formData.ends}
+                                            onChange={handleChange}
+                                        />
                                     </div>
                                 </div>
                             </div>
