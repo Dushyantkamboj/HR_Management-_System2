@@ -8,7 +8,9 @@ const Layout = () => {
   const { isSidebarOpen, setIsSidebarOpen } = useContext(UserContext);
 
   return (
-    <div className="min-h-screen bg-[#f5f6fa] flex overflow-x-hidden">
+    // No overflow-x-hidden here: it creates a scroll container that breaks
+    // the sticky navbar. Horizontal clipping is handled by <main> and .table-shell.
+    <div className="min-h-screen bg-[#f5f6fa] flex">
 
       {/* Mobile Drawer Backdrop */}
       {isSidebarOpen && (

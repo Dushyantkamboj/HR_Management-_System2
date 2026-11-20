@@ -79,7 +79,11 @@ export const leave_status_controller=async(req,res)=>{
 
 export const delete_leave_controller=async(req,res)=>{
     try {
-        const response=await delete_leave_service(req.body);
+        const body={
+            ...req.user,
+            ...req.body
+        }
+        const response=await delete_leave_service(body);
         return res.status(response.status_code).json(response);
     } catch (error) {
         return res.status(400).json({

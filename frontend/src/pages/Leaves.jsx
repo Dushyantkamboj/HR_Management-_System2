@@ -16,6 +16,8 @@ import UpdateLeave from '../components/UpdateLeave.jsx'
 import Cookies from 'js-cookie'
 import { list_leave } from '../api/Leave/listLeave.js'
 import { update_leave_status } from '../api/Leave/updateLeaveStatus.js'
+import DeleteLeave from '../components/DeleteLeave.jsx'
+import { toast } from 'react-toastify'
 
 // Static part of the cards (numbers are calculated from leaves)
 const CARDS = [
@@ -295,6 +297,9 @@ const Leaves = () => {
   // Tracks which leave is being approved/rejected right now
   const [processingId, setProcessingId] = useState(null)
 
+  // Tracks which leave is waiting for delete confirmation
+  const [deleteLeaveId, setDeleteLeaveId] = useState(null)
+
   // Pagination
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
@@ -507,7 +512,20 @@ const Leaves = () => {
   }
 
   const handleDelete = (item) => {
-    console.log("Delete leave:", item)
+    // Admin (1) and HR (2) may delete any leave. Employees may only
+    // delete their own pending requests.
+    if (!isReviewer && Number(item.status) !== LEAVE_STATUS.PENDING) {
+      toast.error("cannot delete leave after approved or reject")
+      return
+    }
+
+    setDeleteLeaveId(item._id)
+  }
+
+  const handleLeaveDelete = (id) => {
+    setLeaves((prev) =>
+      prev.filter((leave) => leave._id !== id)
+    )
   }
 
   return (
@@ -550,6 +568,14 @@ const Leaves = () => {
             leave={editLeave}
             Close={() => setEditLeave(null)}
             LeaveUpdated={handleLeaveUpdated}
+          />
+        )}
+
+        {deleteLeaveId && (
+          <DeleteLeave
+            leaveId={deleteLeaveId}
+            Close={() => setDeleteLeaveId(null)}
+            LeaveDeleted={handleLeaveDelete}
           />
         )}
 

@@ -302,6 +302,7 @@ export const update_leave_service = async (payload) => {
 export const delete_leave_service = async (payload) => {
   try {
     const db = await connectDataBase();
+    const users = db.collection("users");
     const leaves = db.collection("leaves");
 
     const leaveDetails = await leaves.findOne({
@@ -314,6 +315,24 @@ export const delete_leave_service = async (payload) => {
         status: 0,
         status_code: 400,
         message: "leave not find",
+      };
+    }
+
+    // Admin (1) / HR (2) may delete any leave. Employees may only delete
+    // a leave while it is still pending.
+    const reviewer = await users.findOne({
+      _id: new ObjectId(payload.userId),
+      status: 1,
+      is_deleted: false,
+    });
+
+    const isReviewer = reviewer && (reviewer.type === 1 || reviewer.type === 2);
+
+    if (!isReviewer && Number(leaveDetails.status) !== 1) {
+      return {
+        status: 0,
+        status_code: 403,
+        message: "cannot delete leave after approved or reject",
       };
     }
 

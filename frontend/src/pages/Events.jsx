@@ -188,6 +188,22 @@ const Events = () => {
 
 
   // ==============================
+  // INITIALS (first letter of the first two words)
+  // ==============================
+
+  const getInitials = (name) => {
+    if (!name) return "?";
+
+    return name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((word) => word[0]?.toUpperCase() || "")
+      .join("");
+  };
+
+
+  // ==============================
   // FORMAT DATE
   // ==============================
 
@@ -464,15 +480,23 @@ const Events = () => {
 
                     <td className="px-5 py-5">
 
-                      <div>
+                      <div className="flex items-center gap-2">
 
-                        <p className="font-semibold text-gray-800">
-                          {event.title}
-                        </p>
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6C63FF] text-xs font-semibold text-white">
+                          {getInitials(event.title)}
+                        </div>
 
-                        <span className="inline-block mt-1 rounded-full bg-indigo-50 px-2.5 py-1 text-xs text-indigo-600">
-                          {event.category}
-                        </span>
+                        <div>
+
+                          <p className="font-semibold text-gray-800">
+                            {event.title}
+                          </p>
+
+                          <span className="inline-block mt-1 rounded-full bg-indigo-50 px-2.5 py-1 text-xs text-indigo-600">
+                            {event.category}
+                          </span>
+
+                        </div>
 
                       </div>
 

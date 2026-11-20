@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { X } from "lucide-react";
+import { CalendarDays, X, Info } from "lucide-react";
 import { update_event } from "../api/event/updateEvent";
+import { motion } from "framer-motion"
 import { toast } from "react-toastify";
 
 const EditEvent = ({ event, Close, updateEvent }) => {
@@ -59,198 +60,173 @@ const EditEvent = ({ event, Close, updateEvent }) => {
 
   return (
     <div className="modal-overlay">
-
-      <div className="modal-panel max-w-2xl">
-
-        <div className="modal-header px-6">
-          <h2 className="text-xl font-semibold">
-            Edit Event
-          </h2>
-
-          <button
-            onClick={Close}
-            className="rounded-full p-2 hover:bg-gray-100"
-          >
-            <X size={20} />
+      <motion.div
+        initial={{ scale: 0.96 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.3, ease: "linear" }}
+        className="modal-panel max-w-2xl"
+      >
+        {/* Header */}
+        <div className="modal-header pl-5">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="modal-icon">
+              <CalendarDays style={{ width: 20, height: 20, color: "white" }} />
+            </div>
+            <div className="min-w-0">
+              <h1 className="modal-title">Edit Event</h1>
+              <p className="text-sm text-[#94A3B8]">Update the details of your event</p>
+            </div>
+          </div>
+          <button onClick={() => Close()} className="modal-close" aria-label="Close">
+            <X className="text-[#64748B]" size={20} />
           </button>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 sm:p-6"
-        >
+        {/* Event details */}
+        <div className="modal-section mt-2">
+          <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3">
+            <div className="modal-field sm:w-full">
+              <label className="modal-label">Event title *</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                className="modal-input"
+                placeholder="e.g Quarterly all-hands"
+                required
+              />
+            </div>
 
-          {/* Title */}
-          <div className="col-span-1 sm:col-span-2">
-            <label className="mb-1 block text-sm font-medium">
-              Event Title
-            </label>
+            <div className="modal-row">
+              <div className="modal-field">
+                <label className="modal-label">Category*</label>
+                <input
+                  type="text"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  className="modal-input"
+                  required
+                />
+              </div>
+              <div className="modal-field">
+                <label className="modal-label">Status*</label>
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="modal-select"
+                >
+                  <option value={0}>Upcoming</option>
+                  <option value={1}>Completed</option>
+                  <option value={2}>Cancelled</option>
+                </select>
+              </div>
+            </div>
 
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500"
-              required
-            />
+            <div className="modal-row">
+              <div className="modal-field">
+                <label className="modal-label">Date*</label>
+                <input
+                  type="date"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleChange}
+                  className="modal-input"
+                  required
+                />
+              </div>
+              <div className="modal-field">
+                <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="modal-label">Starts*</label>
+                    <input
+                      type="text"
+                      name="starts"
+                      placeholder="10:00 AM"
+                      value={formData.starts}
+                      onChange={handleChange}
+                      className="modal-input"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="modal-label">Ends*</label>
+                    <input
+                      type="text"
+                      name="ends"
+                      placeholder="11:30 AM"
+                      value={formData.ends}
+                      onChange={handleChange}
+                      className="modal-input"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-row">
+              <div className="modal-field">
+                <label className="modal-label">Location*</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className="modal-input"
+                  required
+                />
+              </div>
+              <div className="modal-field">
+                <label className="modal-label">Organizer*</label>
+                <input
+                  type="text"
+                  name="organizer"
+                  value={formData.organizer}
+                  onChange={handleChange}
+                  className="modal-input"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="modal-field sm:w-full">
+              <label className="modal-label">Expected attendees*</label>
+              <input
+                type="number"
+                name="attendees"
+                value={formData.attendees}
+                onChange={handleChange}
+                className="modal-input"
+                placeholder="0"
+                required
+              />
+            </div>
+          </form>
+        </div>
+
+        <div className="mt-5">
+          <div className="modal-info">
+            <Info className="mt-0.5 shrink-0" style={{ width: 15, height: 15, color: "#4F8EF7" }} />
+            <p>Invitations can be shared with employees after the event is saved.</p>
           </div>
+        </div>
 
-          {/* Category */}
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              Category
-            </label>
-
-            <input
-              type="text"
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500"
-              required
-            />
+        {/* Footer */}
+        <div className="modal-footer mt-5">
+          <div className="modal-footer-row">
+            <p className="text-sm text-[#6B7280]">*Required fields</p>
+            <div className="modal-actions">
+              <button type="button" onClick={() => Close()} className="modal-cancel">Cancel</button>
+              <button type="submit" onClick={handleSubmit} disabled={loading} className="modal-primary font-semibold">
+                {loading ? "Updating..." : "Update Event"}
+              </button>
+            </div>
           </div>
-
-          {/* Status */}
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              Status
-            </label>
-
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none"
-            >
-              <option value={0}>Upcoming</option>
-              <option value={1}>Completed</option>
-              <option value={2}>Cancelled</option>
-            </select>
-          </div>
-
-          {/* Date */}
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              Date
-            </label>
-
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none"
-              required
-            />
-          </div>
-
-          {/* Starts */}
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              Starts
-            </label>
-
-            <input
-              type="text"
-              name="starts"
-              placeholder="10:00 AM"
-              value={formData.starts}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none"
-              required
-            />
-          </div>
-
-          {/* Ends */}
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              Ends
-            </label>
-
-            <input
-              type="text"
-              name="ends"
-              placeholder="11:30 AM"
-              value={formData.ends}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none"
-              required
-            />
-          </div>
-
-          {/* Location */}
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              Location
-            </label>
-
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none"
-              required
-            />
-          </div>
-
-          {/* Organizer */}
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              Organizer
-            </label>
-
-            <input
-              type="text"
-              name="organizer"
-              value={formData.organizer}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none"
-              required
-            />
-          </div>
-
-          {/* Attendees */}
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              Attendees
-            </label>
-
-            <input
-              type="number"
-              name="attendees"
-              value={formData.attendees}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none"
-              required
-            />
-          </div>
-
-          {/* Buttons */}
-          <div className="col-span-1 flex flex-wrap justify-end gap-3 border-t pt-5 sm:col-span-2">
-
-            <button
-              type="button"
-              onClick={Close}
-              className="rounded-lg border px-5 py-2"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="rounded-lg bg-[#6C63FF] px-5 py-2 text-white disabled:opacity-50"
-            >
-              {loading ? "Updating..." : "Update Event"}
-            </button>
-
-          </div>
-
-        </form>
-      </div>
+        </div>
+      </motion.div>
     </div>
   );
 };
